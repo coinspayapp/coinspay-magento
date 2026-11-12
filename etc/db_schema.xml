@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © CoinsPay. All rights reserved.
+ * See LICENSE.txt for license details (OSL 3.0).
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="coinspay_invoice" resource="default" engine="innodb" comment="CoinsPay invoices of orders">
+        <column xsi:type="varchar" name="invoice_id" length="36" nullable="false" comment="CoinsPay invoice id"/>
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Order entity id"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store view of the order"/>
+        <column xsi:type="int" name="number" unsigned="true" nullable="false" default="0" comment="CoinsPay invoice number"/>
+        <column xsi:type="smallint" name="attempt" unsigned="true" nullable="false" default="1" comment="Invoice of the order, from 1"/>
+        <column xsi:type="varchar" name="amount" length="40" nullable="false" default="" comment="Amount"/>
+        <column xsi:type="varchar" name="currency" length="10" nullable="false" default="" comment="Currency"/>
+        <column xsi:type="boolean" name="test" nullable="false" default="false" comment="Test invoice"/>
+        <column xsi:type="boolean" name="test_buyer" nullable="false" default="false" comment="Placed by the test buyer"/>
+        <column xsi:type="varchar" name="status" length="16" nullable="false" default="open" comment="Invoice status"/>
+        <column xsi:type="varchar" name="pay_url" length="500" nullable="false" default="" comment="Payment page"/>
+        <column xsi:type="text" name="snapshot" nullable="true" comment="Last seen state of the invoice, JSON"/>
+        <column xsi:type="varchar" name="fingerprint" length="32" nullable="false" default="" comment="What of the invoice the order has seen"/>
+        <column xsi:type="boolean" name="paid_applied" nullable="false" default="false" comment="The invoice paid the order"/>
+        <column xsi:type="varchar" name="plugin_status" length="32" nullable="false" default="" comment="Last order status set by the module"/>
+        <column xsi:type="varchar" name="plugin_event" length="32" nullable="false" default="" comment="Event of that status"/>
+        <column xsi:type="int" name="next_poll" unsigned="true" nullable="true" comment="When to ask CoinsPay again, Unix time"/>
+        <column xsi:type="int" name="poll_until" unsigned="true" nullable="false" default="0" comment="Polling ends, Unix time"/>
+        <column xsi:type="int" name="created_at" unsigned="true" nullable="false" default="0" comment="Created, Unix time"/>
+        <column xsi:type="int" name="updated_at" unsigned="true" nullable="false" default="0" comment="Updated, Unix time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="invoice_id"/>
+        </constraint>
+        <index referenceId="COINSPAY_INVOICE_ORDER_ID" indexType="btree">
+            <column name="order_id"/>
+        </index>
+        <index referenceId="COINSPAY_INVOICE_NEXT_POLL" indexType="btree">
+            <column name="next_poll"/>
+        </index>
+    </table>
+    <table name="coinspay_kv" resource="default" engine="innodb" comment="CoinsPay module state: caches, last events">
+        <column xsi:type="varchar" name="k" length="96" nullable="false" comment="Key"/>
+        <column xsi:type="text" name="v" nullable="true" comment="Value"/>
+        <column xsi:type="int" name="updated_at" unsigned="true" nullable="false" default="0" comment="Updated, Unix time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="k"/>
+        </constraint>
+    </table>
+</schema>

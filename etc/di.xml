@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © CoinsPay. All rights reserved.
+ * See LICENSE.txt for license details (OSL 3.0).
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- The payment method on the Magento payment gateway. -->
+    <virtualType name="CoinsPayFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">CoinsPay\Payment\Model\Config::METHOD</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">CoinsPayValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">CoinsPayValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">CoinsPayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CoinsPayGatewayConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">CoinsPay\Payment\Model\Config::METHOD</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CoinsPayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">CoinsPayGatewayConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CoinsPayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">CoinsPayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CoinsPayCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">CoinsPayGatewayConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CoinsPayValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">CoinsPayCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CoinsPayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">CoinsPay\Payment\Gateway\Command\Initialize</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- The module's log: var/log/coinspay.log. -->
+    <virtualType name="CoinsPayLogHandler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/coinspay.log</argument>
+        </arguments>
+    </virtualType>
+    <!-- Monolog\Logger, not Magento's logger type: that one would add its system.log handlers. -->
+    <virtualType name="CoinsPayLogger" type="Monolog\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">coinspay</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="file" xsi:type="object">CoinsPayLogHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="CoinsPay\Payment\Model\OrderStore">
+        <arguments>
+            <argument name="logger" xsi:type="object">CoinsPayLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Status lists of the settings page: the statuses of the state each event moves the order to. -->
+    <virtualType name="CoinsPayStatusCreated" type="CoinsPay\Payment\Model\Config\Source\Status">
+        <arguments>
+            <argument name="state" xsi:type="string">pending_payment</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CoinsPayStatusWaiting" type="CoinsPay\Payment\Model\Config\Source\Status">
+        <arguments>
+            <argument name="state" xsi:type="string">pending_payment</argument>
+            <argument name="noChange" xsi:type="boolean">true</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CoinsPayStatusPaid" type="CoinsPay\Payment\Model\Config\Source\Status">
+        <arguments>
+            <argument name="state" xsi:type="string">processing</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CoinsPayStatusPaidLike" type="CoinsPay\Payment\Model\Config\Source\Status">
+        <arguments>
+            <argument name="state" xsi:type="string">processing</argument>
+            <argument name="sameAsPaid" xsi:type="boolean">true</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CoinsPayStatusReview" type="CoinsPay\Payment\Model\Config\Source\Status">
+        <arguments>
+            <argument name="state" xsi:type="string">holded</argument>
+            <argument name="noChange" xsi:type="boolean">true</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CoinsPayStatusCanceled" type="CoinsPay\Payment\Model\Config\Source\Status">
+        <arguments>
+            <argument name="state" xsi:type="string">canceled</argument>
+            <argument name="noChange" xsi:type="boolean">true</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="coinspay_sync" xsi:type="object">CoinsPay\Payment\Console\Command\Sync</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="CoinsPay\Payment\Console\Command\Sync">
+        <arguments>
+            <argument name="poller" xsi:type="object">CoinsPay\Payment\Model\Poller\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="CoinsPay\Payment\Observer\CancelInvoice">
+        <arguments>
+            <argument name="poller" xsi:type="object">CoinsPay\Payment\Model\Poller\Proxy</argument>
+        </arguments>
+    </type>
+</config>

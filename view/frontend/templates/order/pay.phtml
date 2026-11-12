@@ -1,0 +1,18 @@
+<?php
+/**
+ * Copyright © CoinsPay. All rights reserved.
+ * See LICENSE.txt for license details (OSL 3.0).
+ */
+
+/** @var \CoinsPay\Payment\Block\Order\Pay $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$payUrl = $block->payUrl();
+?>
+<?php if ($payUrl !== ''): ?>
+    <div class="message info coinspay-order-pay">
+        <div>
+            <?= $escaper->escapeHtml(__('This order waits for a crypto payment.')) ?>
+            <a class="action primary" href="<?= $escaper->escapeUrl($payUrl) ?>"><span><?= $escaper->escapeHtml(__('Go to payment')) ?></span></a>
+        </div>
+    </div>
+<?php endif; ?>

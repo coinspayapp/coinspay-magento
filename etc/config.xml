@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © CoinsPay. All rights reserved.
+ * See LICENSE.txt for license details (OSL 3.0).
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <coinspay>
+                <active>1</active>
+                <model>CoinsPayFacade</model>
+                <title>Cryptocurrency: USDT, BTC, ETH and more</title>
+                <payment_action>order</payment_action>
+                <can_initialize>1</can_initialize>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <is_gateway>1</is_gateway>
+                <allowspecific>0</allowspecific>
+                <sort_order>10</sort_order>
+                <api_url/>
+                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <webhook_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <link_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <lifetime>60</lifetime>
+                <auto_return>1</auto_return>
+                <stablecoins_only>0</stablecoins_only>
+                <buyer_pays_fee>0</buyer_pays_fee>
+                <buyer_pays_network>0</buyer_pays_network>
+                <order_email_after_payment>1</order_email_after_payment>
+                <test_buyer_only>1</test_buyer_only>
+                <debug>0</debug>
+                <status_created>coinspay_awaiting</status_created>
+                <status_pending>no_change</status_pending>
+                <status_partial>no_change</status_partial>
+                <status_paid>processing</status_paid>
+                <status_paid_late>same_as_paid</status_paid_late>
+                <status_paid_over>same_as_paid</status_paid_over>
+                <status_paid_manual>same_as_paid</status_paid_manual>
+                <status_mismatch>coinspay_review</status_mismatch>
+                <status_paid_cancelled>coinspay_review</status_paid_cancelled>
+                <status_test_foreign>coinspay_review</status_test_foreign>
+                <status_expired>canceled</status_expired>
+                <status_expired_partial>coinspay_review</status_expired_partial>
+                <status_cancelled>canceled</status_cancelled>
+                <status_cancelled_partial>coinspay_review</status_cancelled_partial>
+            </coinspay>
+        </payment>
+    </default>
+</config>

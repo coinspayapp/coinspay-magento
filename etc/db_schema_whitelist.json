@@ -1,0 +1,43 @@
+{
+    "coinspay_invoice": {
+        "column": {
+            "invoice_id": true,
+            "order_id": true,
+            "store_id": true,
+            "number": true,
+            "attempt": true,
+            "amount": true,
+            "currency": true,
+            "test": true,
+            "test_buyer": true,
+            "status": true,
+            "pay_url": true,
+            "snapshot": true,
+            "fingerprint": true,
+            "paid_applied": true,
+            "plugin_status": true,
+            "plugin_event": true,
+            "next_poll": true,
+            "poll_until": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "COINSPAY_INVOICE_ORDER_ID": true,
+            "COINSPAY_INVOICE_NEXT_POLL": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "coinspay_kv": {
+        "column": {
+            "k": true,
+            "v": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

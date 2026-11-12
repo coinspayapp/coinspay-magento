@@ -1,0 +1,19 @@
+{
+    "name": "coinspay/coinspay-magento-tools",
+    "description": "Checks of the CoinsPay Magento module that run without Magento: unit tests of the core and the code sniffer",
+    "type": "project",
+    "license": "OSL-3.0",
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6",
+        "magento/magento-coding-standard": "*",
+        "phpcompatibility/php-compatibility": "^9.3"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

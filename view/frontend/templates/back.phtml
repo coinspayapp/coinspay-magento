@@ -1,0 +1,34 @@
+<?php
+/**
+ * Copyright © CoinsPay. All rights reserved.
+ * See LICENSE.txt for license details (OSL 3.0).
+ */
+
+/** @var \CoinsPay\Payment\Block\Back $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$number = (string)$block->view('number');
+?>
+<div class="coinspay-back">
+    <?php if ($block->view('paid')): ?>
+        <p><?= $escaper->escapeHtml(__('The payment of the order %1 is received. Thank you!', $number)) ?></p>
+    <?php elseif ($block->view('pending')): ?>
+        <p><?= $escaper->escapeHtml(__('The payment is on its way and waits for network confirmations. The order status changes by itself once it arrives.')) ?></p>
+    <?php elseif ($block->view('open')): ?>
+        <p><?= $escaper->escapeHtml(__('The order %1 is placed and waits for the payment. The invoice is still open: you can pay it now.', $number)) ?></p>
+    <?php else: ?>
+        <p><?= $escaper->escapeHtml(__('The invoice of the order %1 closed without payment. You can put the items back in the cart and order again.', $number)) ?></p>
+    <?php endif; ?>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <?php if ($block->view('open')): ?>
+                <a class="action primary" href="<?= $escaper->escapeUrl((string)$block->view('pay_url')) ?>"><span><?= $escaper->escapeHtml(__('Go to payment')) ?></span></a>
+            <?php endif; ?>
+            <?php if ($block->view('restorable')): ?>
+                <a class="action secondary" href="<?= $escaper->escapeUrl((string)$block->view('restore_url')) ?>"><span><?= $escaper->escapeHtml(__('Put the items back in the cart')) ?></span></a>
+            <?php endif; ?>
+        </div>
+        <div class="secondary">
+            <a class="action back" href="<?= $escaper->escapeUrl($block->homeUrl()) ?>"><span><?= $escaper->escapeHtml(__('Back to the store')) ?></span></a>
+        </div>
+    </div>
+</div>

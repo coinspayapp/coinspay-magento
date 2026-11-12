@@ -1,0 +1,12 @@
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.zip binary
+
+# Not a part of the Composer package (GitHub archives skip them).
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/bin export-ignore
+/docs/images export-ignore
+/phpcs.xml.dist export-ignore
+/phpunit.xml.dist export-ignore

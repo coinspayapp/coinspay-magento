@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © CoinsPay. All rights reserved.
+ * See LICENSE.txt for license details (OSL 3.0).
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="payment_method_is_active">
+        <observer name="coinspay_availability" instance="CoinsPay\Payment\Observer\Availability"/>
+    </event>
+    <event name="sales_order_save_after">
+        <observer name="coinspay_cancel_invoice" instance="CoinsPay\Payment\Observer\CancelInvoice"/>
+    </event>
+</config>

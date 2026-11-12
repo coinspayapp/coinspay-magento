@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © CoinsPay. All rights reserved.
+ * See LICENSE.txt for license details (OSL 3.0).
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="coinspay" translate="label comment" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>CoinsPay: cryptocurrency payments</label>
+                <comment><![CDATA[Buyers pay in USDT, BTC, ETH and 30+ coins on the CoinsPay payment page; the money goes straight to your wallets.]]></comment>
+                <field id="notices" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Status</label>
+                    <frontend_model>CoinsPay\Payment\Block\Adminhtml\System\Config\Notices</frontend_model>
+                </field>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+
+                <group id="connection" translate="label comment" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Connection</label>
+                    <comment><![CDATA[In the CoinsPay dashboard open your shop: issue an API key with "Invoices only" access under "API keys", then under "Webhook" enter the address below and copy the secret. Each website may have its own CoinsPay shop.]]></comment>
+                    <field id="api_url" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>API address</label>
+                        <config_path>payment/coinspay/api_url</config_path>
+                        <comment>Leave empty to use https://coinspay.app/api/v1. Change it only if CoinsPay gives you another address.</comment>
+                        <validate>validate-url</validate>
+                    </field>
+                    <field id="api_key" translate="label comment" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>API key</label>
+                        <config_path>payment/coinspay/api_key</config_path>
+                        <backend_model>CoinsPay\Payment\Model\Config\Backend\ApiKey</backend_model>
+                        <comment>cpk_… for real payments, cpk_test_… for test mode: test invoices are paid with a button on the payment page, without coins.</comment>
+                    </field>
+                    <field id="webhook_url" translate="label comment" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Webhook address</label>
+                        <frontend_model>CoinsPay\Payment\Block\Adminhtml\System\Config\WebhookUrl</frontend_model>
+                        <comment>Enter this address in the dashboard and save, then press "Send test event" there: the time it arrived shows here.</comment>
+                    </field>
+                    <field id="webhook_secret" translate="label comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Webhook secret</label>
+                        <config_path>payment/coinspay/webhook_secret</config_path>
+                        <backend_model>CoinsPay\Payment\Model\Config\Backend\WebhookSecret</backend_model>
+                        <comment>The whsec_… secret the dashboard shows when you save the webhook.</comment>
+                    </field>
+                    <field id="check" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Check connection</label>
+                        <frontend_model>CoinsPay\Payment\Block\Adminhtml\System\Config\Check</frontend_model>
+                    </field>
+                </group>
+
+                <group id="checkout" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Checkout</label>
+                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Payment from applicable countries</label>
+                        <config_path>payment/coinspay/allowspecific</config_path>
+                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                    </field>
+                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Payment from specific countries</label>
+                        <config_path>payment/coinspay/specificcountry</config_path>
+                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                        <can_be_empty>1</can_be_empty>
+                        <depends>
+                            <field id="allowspecific">1</field>
+                        </depends>
+                    </field>
+                    <field id="min_order_total" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Minimum order total</label>
+                        <config_path>payment/coinspay/min_order_total</config_path>
+                        <validate>validate-zero-or-greater</validate>
+                        <comment>In the base currency. Leave empty for no minimum.</comment>
+                    </field>
+                    <field id="max_order_total" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Maximum order total</label>
+                        <config_path>payment/coinspay/max_order_total</config_path>
+                        <validate>validate-zero-or-greater</validate>
+                        <comment>In the base currency. Leave empty for no maximum.</comment>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Sort order</label>
+                        <config_path>payment/coinspay/sort_order</config_path>
+                        <frontend_class>validate-number</frontend_class>
+                    </field>
+                    <field id="order_email_after_payment" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Send the order e-mail after the payment</label>
+                        <config_path>payment/coinspay/order_email_after_payment</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Otherwise Magento sends it when the order is placed, before the buyer pays.</comment>
+                    </field>
+                </group>
+
+                <group id="invoice" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Invoice</label>
+                    <field id="lifetime" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Time to pay, minutes</label>
+                        <config_path>payment/coinspay/lifetime</config_path>
+                        <validate>required-entry validate-digits validate-digits-range digits-range-15-1440</validate>
+                        <comment>From 15 to 1440 minutes. Keep it shorter than "Pending Payment Order Lifetime" (Sales → Sales → Orders Cron Settings): Magento cancels older pending payment orders itself.</comment>
+                    </field>
+                    <field id="auto_return" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Return the buyer to the store automatically after payment</label>
+                        <config_path>payment/coinspay/auto_return</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Five seconds after the payment page shows "Paid". Otherwise the buyer comes back with the "Back to the store" button.</comment>
+                    </field>
+                    <field id="stablecoins_only" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Accept stablecoins only (USDT and USDC)</label>
+                        <config_path>payment/coinspay/stablecoins_only</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="buyer_pays_fee" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>The buyer pays the CoinsPay fee</label>
+                        <config_path>payment/coinspay/buyer_pays_fee</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Added to the amount in coins on the payment page; the order total stays the same.</comment>
+                    </field>
+                    <field id="buyer_pays_network" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>The buyer pays the network fee of your payout</label>
+                        <config_path>payment/coinspay/buyer_pays_network</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                </group>
+
+                <group id="statuses" translate="label comment" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Order statuses</label>
+                    <comment><![CDATA[What each invoice event does to the order: a payment invoices it (Processing), an expiry cancels it (the stock returns), a dispute puts it on hold. Choose the status within that state; your own statuses of the state are in the lists too. A comment with amounts, coins and transaction hashes goes to the order history at every event.]]></comment>
+                    <field id="status_created" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Order placed, waiting for the payment</label>
+                        <config_path>payment/coinspay/status_created</config_path>
+                        <source_model>CoinsPayStatusCreated</source_model>
+                    </field>
+                    <field id="status_pending" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Payment on its way, waiting for network confirmations</label>
+                        <config_path>payment/coinspay/status_pending</config_path>
+                        <source_model>CoinsPayStatusWaiting</source_model>
+                    </field>
+                    <field id="status_partial" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Partially paid</label>
+                        <config_path>payment/coinspay/status_partial</config_path>
+                        <source_model>CoinsPayStatusWaiting</source_model>
+                    </field>
+                    <field id="status_paid" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Paid</label>
+                        <config_path>payment/coinspay/status_paid</config_path>
+                        <source_model>CoinsPayStatusPaid</source_model>
+                    </field>
+                    <field id="status_paid_late" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Paid after the invoice expired</label>
+                        <config_path>payment/coinspay/status_paid_late</config_path>
+                        <source_model>CoinsPayStatusPaidLike</source_model>
+                    </field>
+                    <field id="status_paid_over" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Paid with overpayment</label>
+                        <config_path>payment/coinspay/status_paid_over</config_path>
+                        <source_model>CoinsPayStatusPaidLike</source_model>
+                    </field>
+                    <field id="status_paid_manual" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Marked as paid manually in the CoinsPay dashboard</label>
+                        <config_path>payment/coinspay/status_paid_manual</config_path>
+                        <source_model>CoinsPayStatusPaidLike</source_model>
+                    </field>
+                    <field id="status_mismatch" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Paid, but the amount or currency differs from the order</label>
+                        <config_path>payment/coinspay/status_mismatch</config_path>
+                        <source_model>CoinsPayStatusReview</source_model>
+                    </field>
+                    <field id="status_paid_cancelled" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Paid order that the store cancelled</label>
+                        <config_path>payment/coinspay/status_paid_cancelled</config_path>
+                        <source_model>CoinsPayStatusReview</source_model>
+                    </field>
+                    <field id="status_test_foreign" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Test payment not by the test buyer</label>
+                        <config_path>payment/coinspay/status_test_foreign</config_path>
+                        <source_model>CoinsPayStatusReview</source_model>
+                    </field>
+                    <field id="status_expired" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Expired unpaid</label>
+                        <config_path>payment/coinspay/status_expired</config_path>
+                        <source_model>CoinsPayStatusCanceled</source_model>
+                    </field>
+                    <field id="status_expired_partial" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Expired partially paid</label>
+                        <config_path>payment/coinspay/status_expired_partial</config_path>
+                        <source_model>CoinsPayStatusReview</source_model>
+                    </field>
+                    <field id="status_cancelled" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Invoice cancelled</label>
+                        <config_path>payment/coinspay/status_cancelled</config_path>
+                        <source_model>CoinsPayStatusCanceled</source_model>
+                    </field>
+                    <field id="status_cancelled_partial" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Invoice cancelled partially paid</label>
+                        <config_path>payment/coinspay/status_cancelled_partial</config_path>
+                        <source_model>CoinsPayStatusReview</source_model>
+                    </field>
+                </group>
+
+                <group id="test" translate="label" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test mode</label>
+                    <field id="test_buyer_only" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>With a test key, show the payment method to the test buyer only</label>
+                        <config_path>payment/coinspay/test_buyer_only</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Open the store as the test buyer with the link below: it works for a day in the browser you open it in. A test payment completes only orders of the test buyer.</comment>
+                    </field>
+                    <field id="test_link" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Test buyer</label>
+                        <frontend_model>CoinsPay\Payment\Block\Adminhtml\System\Config\TestLink</frontend_model>
+                    </field>
+                </group>
+
+                <group id="advanced" translate="label" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Advanced</label>
+                    <field id="debug" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Debug log</label>
+                        <config_path>payment/coinspay/debug</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Writes every step to var/log/coinspay.log. Errors are logged always; keys and secrets never.</comment>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

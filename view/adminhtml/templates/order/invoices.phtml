@@ -1,0 +1,51 @@
+<?php
+/**
+ * Copyright © CoinsPay. All rights reserved.
+ * See LICENSE.txt for license details (OSL 3.0).
+ */
+
+/** @var \CoinsPay\Payment\Block\Adminhtml\Order\Invoices $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$invoices = $block->invoices();
+?>
+<?php if ($invoices): ?>
+    <section class="admin__page-section coinspay-invoices">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $escaper->escapeHtml(__('CoinsPay invoices')) ?></span>
+        </div>
+        <div class="admin__table-wrapper">
+            <table class="data-table admin__table-primary">
+                <thead>
+                    <tr class="headings">
+                        <th><?= $escaper->escapeHtml(__('Invoice')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Amount')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Paid')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Status')) ?></th>
+                        <th><?= $escaper->escapeHtml(__('Created')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($invoices as $invoice): ?>
+                        <tr>
+                            <td>
+                                <?= $escaper->escapeHtml('No. ' . $invoice['number']) ?>
+                                <?php if ($invoice['test']): ?>
+                                    <em>(<?= $escaper->escapeHtml(__('test')) ?>)</em>
+                                <?php endif; ?>
+                            </td>
+                            <td><?= $escaper->escapeHtml($invoice['amount']) ?></td>
+                            <td><?= $escaper->escapeHtml($invoice['paid']) ?></td>
+                            <td><?= $escaper->escapeHtml($invoice['status']) ?></td>
+                            <td><?= $escaper->escapeHtml($block->time($invoice['created'])) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <button type="button" class="action-default" id="coinspay-refresh"
+                data-mage-init="<?= $escaper->escapeHtmlAttr((string)json_encode(['CoinsPay_Payment/js/refresh' => ['url' => $block->refreshUrl(), 'orderId' => $block->orderId(), 'result' => 'coinspay-refresh-result']])) ?>">
+            <span><?= $escaper->escapeHtml(__('Refresh')) ?></span>
+        </button>
+        <span id="coinspay-refresh-result" aria-live="polite"></span>
+    </section>
+<?php endif; ?>

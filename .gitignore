@@ -1,0 +1,4 @@
+/dist/
+/bin/tools/vendor/
+.phpunit.result.cache
+.phpunit.cache/

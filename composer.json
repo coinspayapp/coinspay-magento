@@ -1,0 +1,32 @@
+{
+    "name": "coinspay/coinspay-magento",
+    "description": "CoinsPay crypto payments for Magento 2.4: buyers pay in USDT, BTC, ETH and 30+ coins, the order updates itself, the money goes straight to your wallets",
+    "type": "magento2-module",
+    "version": "0.1.0",
+    "license": "OSL-3.0",
+    "keywords": ["magento", "magento2", "payment", "crypto", "cryptocurrency", "usdt", "bitcoin", "coinspay"],
+    "homepage": "https://coinspay.app",
+    "support": {
+        "issues": "https://github.com/coinspayapp/coinspay-magento/issues",
+        "source": "https://github.com/coinspayapp/coinspay-magento"
+    },
+    "require": {
+        "php": "~7.4.0||~8.1.0||~8.2.0||~8.3.0||~8.4.0||~8.5.0",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "magento/framework": "^103.0.4",
+        "magento/module-backend": "^102.0.4",
+        "magento/module-checkout": "^100.4.4",
+        "magento/module-config": "^101.2.4",
+        "magento/module-payment": "^100.4.4",
+        "magento/module-quote": "^101.2.4",
+        "magento/module-sales": "^103.0.4",
+        "magento/module-store": "^101.1.4"
+    },
+    "autoload": {
+        "files": ["registration.php"],
+        "psr-4": {
+            "CoinsPay\\Payment\\": ""
+        }
+    }
+}
