@@ -124,6 +124,10 @@ docker run --rm -v "$P:/app" -w /app --entrypoint php composer:2 bin/build.php
 
 ## Changelog
 
+### 0.1.1
+
+- Russian: the "Connection" group, the country and sort order settings are translated.
+
 ### 0.1.0
 
 - First release.

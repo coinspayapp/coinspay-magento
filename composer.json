@@ -2,7 +2,7 @@
     "name": "coinspay/coinspay-magento",
     "description": "CoinsPay crypto payments for Magento 2.4: buyers pay in USDT, BTC, ETH and 30+ coins, the order updates itself, the money goes straight to your wallets",
     "type": "magento2-module",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "license": "OSL-3.0",
     "keywords": ["magento", "magento2", "payment", "crypto", "cryptocurrency", "usdt", "bitcoin", "coinspay"],
     "homepage": "https://coinspay.app",

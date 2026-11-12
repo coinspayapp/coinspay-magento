@@ -11,13 +11,14 @@ use CoinsPay\Payment\Model\Core\Text;
 use PHPUnit\Framework\TestCase;
 
 /**
- * The Russian dictionary covers every phrase of the core and of the module's code and templates,
- * keeps their placeholders, and holds no generic Magento words it would retranslate store-wide.
+ * The Russian dictionary covers every phrase of the core, of the module's code and templates and of
+ * its settings page, keeps their placeholders, and holds no generic Magento words it would
+ * retranslate store-wide.
  */
 class DictionaryTest extends TestCase
 {
     /** Words of Magento itself: a module dictionary would change them in every screen. */
-    private const GENERIC = ['Invoice', 'Amount', 'Paid', 'Status', 'Created', 'Refresh', 'test', 'Enabled', 'Title', 'Checkout'];
+    private const GENERIC = ['Invoice', 'Amount', 'Paid', 'Status', 'Created', 'Refresh', 'test', 'Enabled', 'Title', 'Checkout', 'Advanced'];
 
     private function dictionary(): array
     {
@@ -57,10 +58,28 @@ class DictionaryTest extends TestCase
         return array_unique($phrases);
     }
 
+    /**
+     * Labels, comments and tooltips of the settings page (etc/adminhtml/system.xml).
+     *
+     * @return array
+     */
+    private function phrasesOfSettings(): array
+    {
+        $xml = simplexml_load_file(dirname(__DIR__, 2) . '/etc/adminhtml/system.xml');
+        $phrases = [];
+        foreach ($xml->xpath('//label | //comment | //tooltip') as $node) {
+            $text = trim((string)$node);
+            if ($text !== '') {
+                $phrases[] = $text;
+            }
+        }
+        return array_unique($phrases);
+    }
+
     public function testEveryPhraseIsTranslatedWithItsPlaceholders(): void
     {
         $dictionary = $this->dictionary();
-        $phrases = array_merge(array_values(Text::PHRASES), $this->phrasesOfCode());
+        $phrases = array_merge(array_values(Text::PHRASES), $this->phrasesOfCode(), $this->phrasesOfSettings());
         foreach (array_unique($phrases) as $phrase) {
             if (in_array($phrase, self::GENERIC, true)) {
                 continue;

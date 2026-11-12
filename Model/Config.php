@@ -22,7 +22,7 @@ class Config
     public const METHOD = 'coinspay';
 
     /** Version of the module, for the User-Agent of API requests and the settings page. */
-    public const VERSION = '0.1.0';
+    public const VERSION = '0.1.1';
 
     private const PATH = 'payment/coinspay/';
 
